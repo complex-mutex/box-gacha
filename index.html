@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ガチャ</title>
+    <style>
+    div {
+        border: solid 1px;
+    }
+    .HIDE {
+        display: none !important;
+    }
+    .my-function {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin: 1% auto;
+        border: 0px;
+    }
+    #auto-button {
+        width: 20%;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .auto-button-on {
+        background-color: pink;
+    }
+    #gacha-result {
+        border-radius: 10px;
+        margin-top: 1%;
+        margin-bottom: 3%;
+        background-color: #eeeeee;
+        border-color: #eeeeee;
+    }
+    .result-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #dfc0df;
+        margin : 1% 1%;
+    }
+    #result-main {
+        background-color: #029999;
+        border-color: #029999;
+        border-radius: 10px;
+        margin: 0.5% 1.0%;
+        padding: 1% 0;
+    }
+    .result-list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: none;
+        margin: 1% 0.5%;
+    }
+    .ticket-area {
+        margin-bottom: 3%;
+        border-radius: 10px;
+        background-color: #d0f0f0;
+        border-color: #d0f0f0;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    .ticket-name {
+        width: 100%;
+        margin: 0.1% 0.5% 1% 0.5%;
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
+        background-color: #00ffbf;
+        border-color: #00ffbf;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #ticket-type {
+        color: white;
+    }
+    .ticket-button {
+        width: 40%;
+        height: 50%;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        border-color: #d0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image:
+            linear-gradient(-50deg, #d0f0f0, #d0f0f0 10.3%, transparent 10.3%, transparent 89.7%, #d0f0f0 89.7%, #d0f0f0),
+            linear-gradient(50deg, #d0f0f0, #d0f0f0 10.3%, transparent 10.3%, transparent 89.7%, #d0f0f0 89.7%, #d0f0f0);
+    }
+    .ticket-one {
+        background-color: gold;
+    }
+    .ticket-ten {
+        background-color: #ff5f5f;
+    }
+    .main-box {
+        border-radius: 10px;
+        background-color: #029999;
+        border-color: #029999;
+    }
+    #box-header {
+        margin: 10px auto;
+        width: 95%;
+        text-align: center;
+        background-color: pink;
+        border-color: pink;
+    }
+    #box-tabs {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border: none;
+        padding-top: 10px;
+    }
+    .tabs {
+        width: 22%;
+        height: 40px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #afafaf;
+        color: #5f5f5f;
+        border-color: white;
+    }
+    .tabs-now {
+        background-color: #7f7fff;
+        color: white;
+    }
+    #box-contents {
+        border-radius: 10px;
+        background-color: white;
+        border-color: gray;
+        margin: 0 0.25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .box-list {
+        width: 98%;
+        height: 40px;
+        background-color: #cfcfff;
+        border-color: #cfcfff;
+        margin : 5px 0;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .box-target {
+        background-color: #ffcfcf;
+        border-color: #ffcfcf;
+    }
+    .box-name {
+        width: 60%;
+        height: 100%;
+        border: none;
+        display: flex;
+        align-items: center;
+    }
+    .box-remain {
+        width: 25%;
+        height: 80%;
+        border-radius: 5px;
+        margin: auto 1% auto 4%;
+        background-color: #9f9fff;
+        border-color: #9f9fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .box-remain-target {
+        background-color: #ff7f7f;
+        border-color: #ff7f7f;
+    }
+    hr {
+        width : 98%;
+        margin : 0 auto;
+    }
+    input[type="checkbox"] {
+        width: 10%;
+    }
+    span {
+        font-size: 11px;
+    }
+    </style>
+    <script>
+    var CardList = {
+        '会いたくて':[
+            {
+                '生田絵梨花': 1, '桜井玲香': 1, '松村沙友理': 1, '星野みなみ': 1, '堀未央奈': 1, '伊藤純奈': 2, '川後陽菜': 2,
+                '相楽伊織': 2, '樋口日奈': 2, '山崎怜奈': 2, '和田まあや': 2, '★3メンバー(ランダム)': 460, '★1メンバー(ランダム)': 2437
+            },
+            {
+                '西野七瀬': 1, '生駒里奈': 1, '北野日奈子': 1, '高山一実': 1, '中元日芽香': 1, '伊藤かりん': 2, '川村真洋': 2,
+                '鈴木絢音': 2, '中田花奈': 2, '能條愛未': 2, '渡辺みり愛': 2, '★3メンバー(ランダム)': 460, '★1メンバー(ランダム)': 2437
+            },
+            {
+                '白石麻衣': 1, '秋元真夏': 1, '衛藤美彩': 1, '齋藤飛鳥': 1, '橋本奈々未': 1, '若月佑美': 1, '伊藤万理華': 2,
+                '井上小百合': 2, '斎藤ちはる': 2, '斉藤優里': 2, '佐々木琴子': 2, '新内眞衣': 2, '寺田蘭世': 2, '★3メンバー(ランダム)': 565, '★1メンバー(ランダム)': 2989
+            },
+            {
+                '齋藤飛鳥': 1, '秋元真夏': 1, '生田絵梨花': 1, '生駒里奈': 1, '衛藤美彩': 1, '北野日奈子': 1, '桜井玲香': 1,
+                '白石麻衣': 1, '高山一実': 1, '中元日芽香': 1, '西野七瀬': 1, '橋本奈々未': 1, '星野みなみ': 1, '堀未央奈': 1,
+                '松村沙友理': 1, '若月佑美': 1, '伊藤かりん': 2, '伊藤純奈': 2, '伊藤万理華': 2, '井上小百合': 2, '川後陽菜': 2,
+                '川村真洋': 2, '斎藤ちはる': 2, '斉藤優里': 2, '相楽伊織': 2, '佐々木琴子': 2, '新内眞衣': 2, '鈴木絢音': 2,
+                '寺田蘭世': 2, '中田花奈': 2, '能條愛未': 2, '樋口日奈': 2, '山崎怜奈': 2, '渡辺みり愛': 2, '和田まあや': 2, '★3メンバー(ランダム)': 1485, '★1メンバー(ランダム)': 7863
+            }
+        ],
+        'ときめいて':[
+            {
+                '生田絵梨花':1, '桜井玲香':1, '松村沙友理':1, '川後陽菜':1, '相楽伊織':1, '伊藤純奈':2, '星野みなみ':2,
+                '堀未央奈':2, '樋口日奈':2, '生駒里奈':2, '北野日奈子':2, '★3メンバー(ランダム)': 183, '★1メンバー(ランダム)': 980
+            },
+            {
+                '西野七瀬':1, '山崎怜奈':1, '和田まあや':1, '高山一実':1, '能條愛未':1, '伊藤かりん':2, '川村真洋':2,
+                '鈴木絢音':2, '中田花奈':2, '中元日芽香':2, '渡辺みり愛':2, '★3メンバー(ランダム)': 195, '★1メンバー(ランダム)': 1038
+            },
+            {
+                '白石麻衣':1, '秋元真夏':1, '衛藤美彩':1, '齋藤飛鳥':1, '橋本奈々未':1, '若月佑美':2, '伊藤万理華':2,
+                '井上小百合':2, '斎藤ちはる':2, '斉藤優里':2, '佐々木琴子':2, '新内眞衣':2, '寺田蘭世':2, '★3メンバー(ランダム)': 206, '★1メンバー(ランダム)': 1093
+            },
+            {
+                '齋藤飛鳥':1, '秋元真夏':1, '生田絵梨花':1, '衛藤美彩':1, '川後陽菜':1, '相楽伊織':1, '桜井玲香':1,
+                '白石麻衣':1, '高山一実':1, '西野七瀬':1, '能條愛未':1, '橋本奈々未':1, '松村沙友理':1, '山崎怜奈':1,
+                '和田まあや':1, '永島聖羅': 2, '深川麻衣':2, '生駒里奈':2, '伊藤かりん':2, '伊藤純奈':2, '伊藤万理華':2,
+                '井上小百合':2, '川村真洋':2, '北野日奈子':2, '斎藤ちはる':2, '斉藤優里':2, '佐々木琴子':2, '新内眞衣':2,
+                '鈴木絢音':2, '寺田蘭世':2, '中田花奈':2, '中元日芽香':2, '星野みなみ':2, '樋口日奈':2, '堀未央奈':2,
+                '若月佑美':2, '渡辺みり愛':2, '★3メンバー(ランダム)': 310, '★1メンバー(ランダム)': 1645
+             }
+        ]
+    };
+    var CardCurrent;
+    var CardCheck;
+    var CardType = '会いたくて';
+    var BoxCurrent = 0;
+    var DisplayBox = 0;
+    var isAuto = false;
+
+    (function () {
+        CardCurrent = [];
+        CardCheck = [];
+        for (type in CardList) {
+            CardCurrent[type] = [];
+            CardCheck[type] = [];
+            for (list in CardList[type]) {
+                CardCurrent[type][list] = [];
+                CardCheck[type][list] = [];
+                for (name in CardList[type][list]) {
+                    CardCurrent[type][list][name] = CardList[type][list][name];
+                    CardCheck[type][list][name] = (CardList[type][list][name] === 1);
+                }
+            }
+        }
+    })();
+
+    function Init() {
+        BoxCurrent = DisplayBox = 0;
+        var elem = document.getElementsByClassName("tabs");
+        elem[BoxCurrent].classList.add("tabs-now");
+        setCardType();
+        resultShow(false);
+        Display();
+    }
+    function setCardType() {
+        document.getElementById("ticket-type").innerText = '[' + CardType + ']ガチャ';
+    }
+    function CountRemain() {
+        var ans = 0;
+        var _Box = CardCurrent[CardType][BoxCurrent];
+        for (name in _Box) ans += _Box[name]
+        return ans;
+    }
+    function Display() {
+        var Main = CardList[CardType][DisplayBox];
+        var remain = CardCurrent[CardType][DisplayBox];
+        var checked = CardCheck[CardType][DisplayBox];
+        var str = "";
+        var first = true;
+        for(name in Main) {
+            if (!first) {
+                str += '<br><hr>';
+            }
+            str += '<div class="box-list' + (first ? ' box-target' : '') + '">'
+                +      '<input type="checkbox" class="box-need"' + (checked[name] ? ' checked' : '') + ' onclick=updateCheck("' + name + '") value="' + name + '">'
+                +      '<div class="box-name"><span>' + displayName(name) + '</span></div>'
+                +      '<div class="box-remain' + (first ? ' box-remain-target' : '') + '">' + remain[name] + '/' + Main[name] + '</div>'
+                + '</div>';
+            first = false;
+        }
+        document.getElementById("box-contents").innerHTML = str;
+        document.getElementById("gacha10div").classList.remove("HIDE");
+        var CR = CountRemain();
+        if (CR == 1) {
+            document.getElementById("gacha10div").classList.add("HIDE");
+        } else {
+            document.getElementById("gacha10").innerText = Math.min(CR, 10) + '回ガチャる';
+        }
+    }
+    function updateCheck(name) {
+        var checked = CardCheck[CardType][DisplayBox];
+        var elem = document.getElementsByClassName("box-need");
+        for (i in elem) {
+            if (elem[i].value == name) {
+                checked[name] = elem[i].checked;
+            }
+        }
+    }
+    function autoGoto() {
+        var Main = CardCurrent[CardType][BoxCurrent];
+        var checked = CardCheck[CardType][BoxCurrent];
+        var cnt = 0;
+        for (name in Main) {
+            cnt += Main[name] * checked[name];
+        }
+        return cnt == 0;
+    }
+    function resultShow(flg) {
+        var elem = document.getElementById("gacha-result").classList;
+        if (flg) {
+            elem.remove("HIDE");
+        } else {
+            elem.add("HIDE");
+        }
+    }
+    function random(m) {
+        return Math.floor(Math.random() * m);
+    }
+    function shuffle(nl) {
+        for (var i = nl.length - 1; i > 0; i--) {
+            var p = random(i + 1);
+            var temp = nl[p];
+            nl[p] = nl[i];
+            nl[i] = temp;
+        }
+    }
+    function displayName(name) {
+        if (name.charAt(0) == '★') return name;
+        else return '【' + CardType + '】' + name + '×1';
+    }
+    function drawGacha(Count) {
+        for (var _ = 0; autoGoto() && _ < 5; _++) {
+            gotoNext();
+        }
+        var Main = CardCurrent[CardType][BoxCurrent];
+        changeBox(BoxCurrent);
+        resultShow(true);
+        var nl = [];
+        for (name in Main) {
+            for (var i = 0; i < Main[name]; i++) {
+                nl.push(name);
+            }
+        }
+        var res = [];
+        Count = Math.min(Count, nl.length);
+        for (var _ = 0; _ < Count; _++) {
+            shuffle(nl);
+            var select = nl.pop();
+            if (!(select in res)) res[select] = 0;
+            res[select]++;
+        }
+        var str = "";
+        for (name in Main) {
+            if (name in res) {
+                str += '<div class="result-list">'
+                    +      '<span>' + displayName(name) + '</span>'
+                    +      '<span>' + res[name] + '個</span>'
+                    +      '<span>' + Main[name] + '→<font color="yellow">' + (Main[name] - res[name]) + '</font>/' + CardList[CardType][BoxCurrent][name] + '</span>'
+                    +  '</div><hr>';
+            }
+        }
+        for (name in res) {
+            Main[name] -= res[name];
+        }
+        document.getElementById("result-main").innerHTML = str;
+        if (nl.length === 0) {
+            gotoNext();
+            for (var _ = 0; autoGoto() && _ < 5; _++) {
+                gotoNext();
+            }
+        }
+        Display();
+    }
+    function gotoNext() {
+        var Main = CardCurrent[CardType];
+        var nextBox = Math.min(Main.length - 1, BoxCurrent + 1);
+        if (BoxCurrent === Main.length - 1) {
+            for (name in Main[nextBox]) {
+                Main[nextBox][name] = CardList[CardType][nextBox][name];
+            }
+        }
+        BoxCurrent = nextBox;
+        changeBox(BoxCurrent);
+    }
+    function changeBox(num) {
+        if (DisplayBox != num) {
+            var elem = document.getElementsByClassName("tabs");
+            elem[DisplayBox].classList.remove("tabs-now");
+            elem[num].classList.add("tabs-now");
+            DisplayBox = num;
+        }
+    }
+    function changeType() {
+        var e = document.getElementById("type-select");
+        var t = e.options[e.selectedIndex].text;
+        CardType = t;
+        BoxCurrent = 0;
+        setCardType()
+        Display();
+    }
+    function changeAuto() {
+        isAuto = !isAuto;
+        if (isAuto) {
+            document.getElementById("auto-button").classList.add("auto-button-on");
+        } else {
+            document.getElementById("auto-button").classList.remove("auto-button-on");
+        }
+    }
+    function autodraw() {
+        if (isAuto) {
+            drawGacha(10);
+            setTimeout(autodraw, 100);
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="my-function">
+        <div id="auto-button" onclick="changeAuto();autodraw()"><span>auto</span></div>
+        <select id="type-select" onchange="changeType()">
+            <script>
+            for (type in CardList) {
+                document.write('<option>' + type + '</option>');
+            }
+            </script>
+        </select>
+    </div>
+    <div id="gacha-result">
+        <div class="result-header"><span>獲得アイテム</span></div>
+        <div id="result-main"></div>
+    </div>
+    <div class="ticket-area">
+        <div class="ticket-name"><span id="ticket-type"></span></div>
+        <div class="ticket-button ticket-one" onclick="drawGacha(1)"><span>1回ガチャる</span></div>
+        <div class="ticket-button ticket-ten" id="gacha10div" onclick="drawGacha(10)"><span id="gacha10">10回ガチャる</span></div>
+    </div>
+    <div class="main-box">
+        <div id="box-header"><span>ガチャの中身</span></div>
+        <div id="box-tabs">
+            <div class="tabs" onclick="changeBox(0);Display()">1stBox</div>
+            <div class="tabs" onclick="changeBox(1);Display()">2ndBox</div>
+            <div class="tabs" onclick="changeBox(2);Display()">3rdBox</div>
+            <div class="tabs" onclick="changeBox(3);Display()">4thBox</div>
+        </div>
+        <div id="box-contents"></div>
+    </div>
+    <script>Init();</script>
+</body>
+</html>
